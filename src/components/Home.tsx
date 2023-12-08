@@ -7,6 +7,10 @@ export default function Home() {
     <div className="h-screen w-full">
       <div className="h-fit flex relative">
         <div className="w-[24rem] border-2 h-full bg-red-50 p-2">
+          <div className="w-full my-4">
+            <Button className="w-full h-[4rem]">Find Match</Button>
+          </div>
+
           <div className="flex items-center gap-4 bg-white border-2 p-2 rounded-md my-2">
             <img
               src={Default}
