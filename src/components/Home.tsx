@@ -43,6 +43,7 @@ export default function Home() {
   const [recepientMessage, setRecepientMessage] = useState<MessageType[]>([]);
   const [messageSent, setMessageSent] = useState('');
   const [showMessageRecepient, setShowMessageRecepient] = useState(false);
+  const [showChatNow, setShowChatNow] = useState(false);
 
   const handleShowMessage = (id: number) => {
     setRecepientIDNumber(id);
@@ -57,6 +58,7 @@ export default function Home() {
         console.log(res.data, 'get message recepient');
         setRecepientMessage(res.data);
         setShowMessageRecepient(true);
+        // setShowChatNow(true);
       });
   };
 
@@ -165,6 +167,7 @@ export default function Home() {
         setProfileMatched(res.data);
         setRecepientIDNumber(id);
         setShowFindMatch(false);
+        setShowChatNow(true);
       });
   };
 
@@ -181,8 +184,13 @@ export default function Home() {
         console.log(res.data, 'message sent');
         fetchMessageRecepient();
         setMessageSent('');
+        setShowChatNow(false);
       });
   };
+
+  const sortedMessages = recepientMessage.slice().sort((a, b) => {
+    return Date.parse(a.created_at) - Date.parse(b.created_at);
+  });
 
   return (
     <div className="h-screen w-full relative">
@@ -196,27 +204,6 @@ export default function Home() {
               Find Match
             </Button>
           </div>
-
-          {profileMatched.length > 0 &&
-            profileMatched.map((profile, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-4 bg-white border-2 p-2 rounded-md my-2 h-[8rem] "
-              >
-                <img
-                  src={profile.profile}
-                  alt="default"
-                  className="w-[6rem] h-[6rem] object-cover rounded-full"
-                />
-
-                <div>
-                  <h1 className="text-2xl font-bold cursor-pointer">
-                    {profile.fullname}
-                  </h1>
-                  <p>broo i miss you ..</p>
-                </div>
-              </div>
-            ))}
 
           <div>
             {message.length > 0 ? (
@@ -261,33 +248,6 @@ export default function Home() {
         </div>
         <div className="w-full border-2 h-full px-4">
           <div className="flex flex-col">
-            {profileMatched.length > 0 &&
-              profileMatched.map((profile, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-4 bg-white border-2 p-2 rounded-md my-2"
-                >
-                  <img
-                    src={profile.profile}
-                    alt="default"
-                    className="w-[6rem] h-[6rem] object-cover rounded-full"
-                  />
-
-                  <div>
-                    <h1 className="text-2xl font-bold cursor-pointer">
-                      {profile.fullname +
-                        ', ' +
-                        profile.age +
-                        ' ' +
-                        profile.gender +
-                        ' ' +
-                        profile.course}
-                    </h1>
-                    <p>{profile.looking_for}</p>
-                  </div>
-                </div>
-              ))}
-
             {showMessageRecepient && (
               <>
                 <div className="flex items-center justify-between border-b-2 p-2">
@@ -309,8 +269,8 @@ export default function Home() {
                     })
                     .slice(0, 1)}
                 </div>
-                <div className="overflow-x-auto h-fit">
-                  {recepientMessage.map((res, index) => {
+                <div className="w-full flex flex-col h-[40rem] overflow-x-auto">
+                  {sortedMessages.map((res, index) => {
                     return (
                       <div
                         key={index}
@@ -480,6 +440,57 @@ export default function Home() {
           ) : (
             <div>no match found</div>
           )}
+        </div>
+      )}
+
+      {showChatNow && (
+        <div className="w-full top-0 absolute flex justify-center items-center h-screen bg-white bg-opacity-75">
+          {profileMatched.length > 0 &&
+            profileMatched.map((profile, index) => {
+              return (
+                <div
+                  className="w-[40rem] mt-[-10rem] bg-white border-2 p-4 rounded-lg"
+                  key={index}
+                >
+                  <div className="flex h-[7rem]  items-center gap-4 border-b-2">
+                    <img
+                      className="w-[5rem] h-[5rem] object-cover rounded-full "
+                      src={profile.profile}
+                      alt=""
+                    />
+
+                    <div>
+                      <h1 className="font-bold">
+                        {profile.fullname +
+                          ', ' +
+                          profile.age +
+                          '. ' +
+                          profile.gender +
+                          ' - ' +
+                          profile.course}
+                      </h1>
+
+                      <p>{profile.looking_for}</p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <form
+                      className="flex gap-4 mt-[2rem] items-center"
+                      onSubmit={handleMessageSent}
+                    >
+                      <Input
+                        onChange={(e) => setMessageSent(e.target.value)}
+                        value={messageSent}
+                        className="h-[4rem]"
+                        placeholder="send message now!"
+                      />
+                      <Button type="submit">Send</Button>
+                    </form>
+                  </div>
+                </div>
+              );
+            })}
         </div>
       )}
     </div>
