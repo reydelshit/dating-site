@@ -75,7 +75,7 @@ export default function SettingUpAccount() {
         console.log(res.data);
 
         if (res.data.status === 'success') {
-          navigate('/');
+          navigate('/home');
         }
       });
   };

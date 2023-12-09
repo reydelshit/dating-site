@@ -7,9 +7,9 @@ import { useState } from 'react';
 export default function Login() {
   const [loginDetails, setLoginDetails] = useState([]);
 
-  if (localStorage.getItem('dating_site_id')) {
-    window.location.href = '/home';
-  }
+  // if (!localStorage.getItem('dating_site_id')) {
+  //   window.location.href = '/home';
+  // }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

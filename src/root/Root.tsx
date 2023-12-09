@@ -6,7 +6,7 @@ import Header from '@/components/Header';
 export default function Root() {
   const location = useLocation();
 
-  const isLogin = localStorage.getItem('isLogin');
+  const isLogin = localStorage.getItem('dating_site_id');
 
   if (!isLogin) {
     return (window.location.href = '/login');
