@@ -8,6 +8,7 @@ import Login from './components/Login.tsx';
 import RegisterAccount from './components/RegisterAccount.tsx';
 import SettingUpAccount from './components/SettingUpAccount.tsx';
 import Home from './components/Home.tsx';
+import Profile from './components/Profile.tsx';
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,11 @@ const router = createBrowserRouter([
       {
         path: '/home',
         element: <Home />,
+      },
+
+      {
+        path: '/profile',
+        element: <Profile />,
       },
     ],
   },

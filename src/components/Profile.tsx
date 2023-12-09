@@ -13,8 +13,21 @@ import {
 } from '@/components/ui/select';
 import Default from '@/assets/default.jpg';
 
-export default function SettingUpAccount() {
-  const [profileDetails, setProfileDetails] = useState([]);
+export default function Profile() {
+  const [profileDetails, setProfileDetails] = useState({
+    fullname: '',
+    age: '',
+    gender: '',
+    year: '',
+    course: '',
+    municipality: '',
+    province: '',
+    interest: '',
+    preferences: '',
+
+    looking_for: '',
+  });
+
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [warningSelections, setWarningSelections] = useState('');
   const [image, setImage] = useState('');
@@ -22,22 +35,21 @@ export default function SettingUpAccount() {
   const navigate = useNavigate();
   const credential_id = localStorage.getItem('dating_site_id');
 
-  useEffect(() => {
-    checkIfAlreadySetupAccount();
-  }, []);
-
-  const checkIfAlreadySetupAccount = () => {
+  const fetchInterestFromProfile = () => {
     axios
       .get(`${import.meta.env.VITE_DATING_SITE}/profile.php`, {
         params: { credential_id },
       })
       .then((res) => {
-        if (res.data.length > 0) {
-          return navigate('/home');
-        }
         console.log(res.data);
+        setProfileDetails(res.data[0]);
+        setImage(res.data[0].profile);
       });
   };
+
+  useEffect(() => {
+    fetchInterestFromProfile();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -64,19 +76,23 @@ export default function SettingUpAccount() {
     e.preventDefault();
     const selectedInterestsString = selectedInterests.join(', ');
     axios
-      .post(`${import.meta.env.VITE_DATING_SITE}/profile.php`, {
+      .put(`${import.meta.env.VITE_DATING_SITE}/profile.php`, {
         ...profileDetails,
-        interest: selectedInterestsString,
+        interest:
+          selectedInterestsString.length > 0
+            ? selectedInterestsString
+            : profileDetails.interest,
         profile: image,
-        looking_for: lookingFor,
+        looking_for:
+          lookingFor.length > 0 ? lookingFor : profileDetails.looking_for,
         credential_id,
       })
       .then((res) => {
         console.log(res.data);
 
         if (res.data.status === 'success') {
-          navigate('/home');
-          window.location.reload();
+          // navigate('/home');
+          // window.location.reload();
         }
       });
   };
@@ -119,9 +135,9 @@ export default function SettingUpAccount() {
 
   return (
     <div className="w-full flex  items-center h-screen flex-col">
-      <h1 className="text-2xl my-4 font-bold">Setting Up Account</h1>
+      <h1 className="text-2xl my-4 font-bold">Profile</h1>
 
-      <div className="w-[50rem] border-2 bg-white p-5 rounded-lg shadow-lg">
+      <div className="w-[50rem] border-2 p-4 rounded-md bg-white">
         <form onSubmit={handleSubmit}>
           <div className="flex items-center justify-between ">
             <img
@@ -130,7 +146,6 @@ export default function SettingUpAccount() {
               alt="profile"
             />
             <Input
-              required
               type="file"
               accept="image/*"
               onChange={handleChangeImage}
@@ -143,7 +158,7 @@ export default function SettingUpAccount() {
             <div className="w-full">
               <Label>Fullname:</Label>
               <Input
-                required
+                defaultValue={profileDetails.fullname}
                 onChange={handleChange}
                 type="text"
                 name="fullname"
@@ -152,7 +167,7 @@ export default function SettingUpAccount() {
             <div className="w-full">
               <Label>Gender:</Label>
               <Input
-                required
+                defaultValue={profileDetails.gender}
                 onChange={handleChange}
                 type="text"
                 name="gender"
@@ -161,20 +176,30 @@ export default function SettingUpAccount() {
 
             <div className="w-full">
               <Label>Age:</Label>
-              <Input required onChange={handleChange} type="text" name="age" />
+              <Input
+                defaultValue={profileDetails.age}
+                onChange={handleChange}
+                type="text"
+                name="age"
+              />
             </div>
           </div>
 
           <div className="flex justify-between gap-2">
             <div className="w-full">
               <Label>Year:</Label>
-              <Input required onChange={handleChange} type="text" name="year" />
+              <Input
+                defaultValue={profileDetails.year}
+                onChange={handleChange}
+                type="text"
+                name="year"
+              />
             </div>
 
             <div className="w-full">
               <Label>Course:</Label>
               <Input
-                required
+                defaultValue={profileDetails.course}
                 onChange={handleChange}
                 type="text"
                 name="course"
@@ -186,7 +211,7 @@ export default function SettingUpAccount() {
             <div className="w-full">
               <Label>Municipality:</Label>
               <Input
-                required
+                defaultValue={profileDetails.municipality}
                 onChange={handleChange}
                 type="text"
                 name="municipality"
@@ -196,7 +221,7 @@ export default function SettingUpAccount() {
             <div className="w-full">
               <Label>Province:</Label>
               <Input
-                required
+                defaultValue={profileDetails.province}
                 onChange={handleChange}
                 type="text"
                 name="province"
@@ -205,6 +230,9 @@ export default function SettingUpAccount() {
           </div>
 
           <div>
+            <Label className="block my-2">
+              Current Interests: {profileDetails.interest}
+            </Label>
             <Label>
               Interests (select only 3){' '}
               <span className="text-red-500">{warningSelections}</span>
@@ -272,6 +300,7 @@ export default function SettingUpAccount() {
             </div>
 
             <div className="my-4 flex flex-col gap-4">
+              <Label>Current: {profileDetails.looking_for}</Label>
               <Select onValueChange={handleLookingFor}>
                 <SelectTrigger>
                   <SelectValue placeholder="Looking for.." />
@@ -288,7 +317,7 @@ export default function SettingUpAccount() {
               <div className="w-full">
                 <Label>Preferences: (Male, Female, Gay, Lesbian etc.)</Label>
                 <Input
-                  required
+                  defaultValue={profileDetails.preferences}
                   onChange={handleChange}
                   type="text"
                   name="preferences"

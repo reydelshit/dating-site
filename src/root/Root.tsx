@@ -13,7 +13,7 @@ export default function Root() {
   }
 
   return (
-    <div className="w-full border-2">
+    <div className="w-full">
       <Header />
       <div className="flex">
         {/* <Sidebar /> */}

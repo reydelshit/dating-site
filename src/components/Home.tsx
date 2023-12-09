@@ -4,6 +4,12 @@ import { Button } from './ui/button';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import moment from 'moment';
+import { Label } from '@radix-ui/react-label';
+import ImageHome from '@/assets/5608639.jpg';
+import { MdOutlineArrowCircleRight } from 'react-icons/md';
+import { MdOutlineArrowCircleLeft } from 'react-icons/md';
+import { FaUsersViewfinder } from 'react-icons/fa6';
+import { BiSolidMessageRoundedDots } from 'react-icons/bi';
 
 type ProfileMatched = {
   age: string;
@@ -16,6 +22,9 @@ type ProfileMatched = {
   profile: string;
   profile_id: number;
   year: string;
+  preferences: string;
+  province: string;
+  municipality: string;
 };
 
 type MessageType = {
@@ -26,6 +35,12 @@ type MessageType = {
   profile: string;
   sender_username: string;
   profile_picture: string;
+
+  age: string;
+  course: string;
+  looking_for: string;
+  fullname: string;
+  gender: string;
 };
 
 export default function Home() {
@@ -120,24 +135,9 @@ export default function Home() {
       });
   };
 
-  // const getMessageRecepient = () => {
-  //   axios
-  //     .get(`${import.meta.env.VITE_DATING_SITE}/message-fetch.php`, {
-  //       params: {
-  //         sender_id: credential_id,
-  //         receiver_id: 3,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       console.log(res.data, 'get message recepient');
-  //       setRecepientMessage(res.data);
-  //     });
-  // };
-
   useEffect(() => {
     fetchInterestFromProfile();
     getRecepientMessage();
-    // getMessageRecepient();
   }, []);
 
   const handleSwipeLeft = () => {
@@ -166,8 +166,8 @@ export default function Home() {
         console.log(res.data, 'chat');
         setProfileMatched(res.data);
         setRecepientIDNumber(id);
-        setShowFindMatch(false);
-        setShowChatNow(true);
+        // setShowFindMatch(true);
+        // setShowChatNow(true);
       });
   };
 
@@ -195,17 +195,21 @@ export default function Home() {
   return (
     <div className="h-screen w-full relative">
       <div className="h-fit flex relative">
-        <div className="w-[24rem] border-2 h-full bg-red-50 p-2">
+        <div className="w-[24rem] h-screen p-2 border-r-2 border-red-500">
           <div className="w-full my-4">
             <Button
-              onClick={() => setShowFindMatch(!showFindMatch)}
+              onClick={() => setShowFindMatch(true)}
               className="w-full h-[4rem]"
             >
+              <FaUsersViewfinder className="w-[2rem] h-[2rem] text-white cursor-pointer mr-2" />{' '}
               Find Match
             </Button>
           </div>
 
           <div>
+            <Label className="text-sm font-bold">
+              Note: Message will appear below if they have reply to your message
+            </Label>
             {message.length > 0 ? (
               message
                 .filter(
@@ -214,7 +218,7 @@ export default function Home() {
                 .map((mes, index) => {
                   return (
                     <div
-                      className="border-2 p-2 mt-[1rem] rounded-sm bg-gray-200"
+                      className=" p-2 mt-[1rem] rounded-sm border-2 border-red-500"
                       key={index}
                     >
                       <div className="flex items-center gap-4">
@@ -246,11 +250,11 @@ export default function Home() {
             )}
           </div>
         </div>
-        <div className="w-full border-2 h-full px-4">
+        <div className="w-full  h-full px-4">
           <div className="flex flex-col">
             {showMessageRecepient && (
               <>
-                <div className="flex items-center justify-between border-b-2 p-2">
+                <div className="flex items-center justify-between border-b-2 p-2 border-red-500">
                   {recepientMessage
                     .filter(
                       (mes) => Number(mes.sender_id) !== Number(credential_id),
@@ -263,13 +267,25 @@ export default function Home() {
                             src={res.profile_picture}
                             alt=""
                           />
-                          <h1 className="font-bold">{res.sender_username}</h1>
+                          <div>
+                            <h1 className="font-bold">
+                              {res.sender_username +
+                                ', ' +
+                                res.age +
+                                '. ' +
+                                res.gender +
+                                ' - ' +
+                                res.course}
+                            </h1>
+
+                            <p>{res.looking_for}</p>
+                          </div>
                         </div>
                       );
                     })
                     .slice(0, 1)}
                 </div>
-                <div className="w-full flex flex-col h-[40rem] overflow-x-auto">
+                <div className="w-full flex flex-col h-[40rem] overflow-x-auto px-4">
                   {sortedMessages.map((res, index) => {
                     return (
                       <div
@@ -303,7 +319,7 @@ export default function Home() {
                     onSubmit={handleMessageSent}
                   >
                     <Input
-                      className="h-[4rem]"
+                      className="h-[4rem] bg-white"
                       value={messageSent}
                       onChange={(e) => setMessageSent(e.target.value)}
                       placeholder="Type your message here"
@@ -316,7 +332,13 @@ export default function Home() {
             )}
 
             {!showMessageRecepient && profileMatched.length === 0 && (
-              <div className="w-full flex justify-center items-center h-[80vh]">
+              <div className="w-full flex justify-center items-center flex-col h-[80vh]">
+                <img
+                  className="w-[20rem] rounded-lg mb-2"
+                  src={ImageHome}
+                  alt="image"
+                />
+
                 <h1 className="font-bold text-3xl">
                   FIND MATCH AND START CHATTING 🥰😍🥰
                 </h1>
@@ -327,7 +349,7 @@ export default function Home() {
       </div>
 
       {showFindMatch && (
-        <div className="w-full top-0 absolute flex justify-center h-[90vh] bg-white bg-opacity-75">
+        <div className="w-full top-0 absolute flex justify-center h-screen bg-white bg-opacity-75">
           {interest.length > 0 ? (
             currentProfileIndex <
             interest.filter(
@@ -346,22 +368,24 @@ export default function Home() {
                     return (
                       <div
                         key={index}
-                        className="w-[40rem] bg-white border-2 h-[45rem] object-cover mt-[5rem] relative rounded-xl overflow-hidden"
+                        className="w-[40rem] bg-white border-2 h-[50rem] object-cover mt-[5rem] relative rounded-xl overflow-hidden"
                       >
                         <div className="absolute inset-0 flex justify-center items-center z-50">
                           <div className="absolute left-0 flex items-center p-2">
-                            <Button onClick={handleSwipeLeft}>
-                              Swipe Left
-                            </Button>
+                            <MdOutlineArrowCircleLeft
+                              className="w-[3rem] h-[3rem] text-red-500 cursor-pointer"
+                              onClick={handleSwipeLeft}
+                            />
                           </div>
                           <div className="absolute right-0 flex items-center p-2">
-                            <Button onClick={handleSwipeRight}>
-                              Swipe Right
-                            </Button>
+                            <MdOutlineArrowCircleRight
+                              className="w-[3rem] h-[3rem] text-red-500 cursor-pointer"
+                              onClick={handleSwipeRight}
+                            />
                           </div>
                         </div>
 
-                        <div className="absolute top-0 bg-white w-full p-2 h-[4rem] bg-opacity-70 flex justify-between items-center z-90">
+                        <div className="absolute top-0 bg-white w-full p-2 h-[4rem]  flex justify-between items-center z-90">
                           <h1 className="text-2xl font-bold cursor-pointer text-red-500">
                             {profileMatched.looking_for}
                           </h1>
@@ -375,7 +399,7 @@ export default function Home() {
                         </div>
 
                         <img
-                          className="h-full block w-full z-[-10] bg-red-500 object-cover"
+                          className="h-full block w-full z-[-10] object-cover"
                           src={
                             profileMatched.profile.length > 0
                               ? profileMatched.profile
@@ -384,14 +408,27 @@ export default function Home() {
                           alt="image"
                         />
 
-                        <div className="absolute bottom-0 bg-white w-full p-2 h-[8rem] bg-opacity-70">
-                          <h1 className="text-2xl font-bold cursor-pointer text-red-500">
-                            {profileMatched.fullname +
-                              ', ' +
-                              profileMatched.age +
-                              ' ' +
-                              profileMatched.gender}
-                          </h1>
+                        <div className="absolute bottom-0 bg-[#ffeadd] flex justify-between w-full p-2 h-[10rem] bg-opacity-80">
+                          <div>
+                            <h1 className="text-2xl font-bold cursor-pointer text-red-500">
+                              {profileMatched.fullname +
+                                ', ' +
+                                profileMatched.age +
+                                ' ' +
+                                profileMatched.gender}
+                            </h1>
+
+                            <p className="text-sm">{profileMatched.course}</p>
+                            <p>{profileMatched.interest}</p>
+                            <p>Prefences: {profileMatched.preferences}</p>
+
+                            <p>
+                              {profileMatched.province +
+                                ' ' +
+                                profileMatched.municipality}
+                            </p>
+                          </div>
+
                           <div className="mt-[1rem] flex justify-center">
                             <Button
                               onClick={() =>
@@ -401,6 +438,7 @@ export default function Home() {
                               }
                               className="h-[3rem] w-[8rem] z-50"
                             >
+                              <BiSolidMessageRoundedDots className="w-[2rem] h-[2rem] text-white cursor-pointer" />
                               Chat now
                             </Button>
                           </div>
@@ -424,10 +462,16 @@ export default function Home() {
 
                 <div className="absolute inset-0 flex justify-center items-center">
                   <div className="absolute left-0 flex items-center p-2">
-                    <Button onClick={handleSwipeLeft}>Swipe Left</Button>
+                    <MdOutlineArrowCircleLeft
+                      className="w-[3rem] h-[3rem] text-red-500 cursor-pointer"
+                      onClick={handleSwipeLeft}
+                    />
                   </div>
                   <div className="absolute right-0 flex items-center p-2">
-                    <Button onClick={handleSwipeRight}>Swipe Right</Button>
+                    <MdOutlineArrowCircleRight
+                      className="w-[3rem] h-[3rem] text-red-500 cursor-pointer"
+                      onClick={handleSwipeRight}
+                    />
                   </div>
                 </div>
                 <div>

@@ -42,7 +42,7 @@ export default function Login() {
 
         <form
           onSubmit={handleLogin}
-          className="flex flex-col justify-center items-center "
+          className="flex flex-col justify-center items-center bg-white p-5 rounded-lg shadow-lg w-[30rem]"
         >
           <Input
             type="text"
@@ -65,7 +65,7 @@ export default function Login() {
 
         <span className="mt-5 block">
           Don't have an account?
-          <Link to="/register" className="text-green-500 ml-2">
+          <Link to="/register" className="text-red-500 ml-2">
             click me
           </Link>
         </span>
