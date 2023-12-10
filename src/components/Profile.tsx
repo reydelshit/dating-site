@@ -230,8 +230,11 @@ export default function Profile() {
           </div>
 
           <div>
-            <Label className="block my-2">
-              Current Interests: {profileDetails.interest}
+            <Label className="block my-4 ">
+              Current Interests:{' '}
+              <span className="bg-red-300 w-fit p-1 rounded-md">
+                {profileDetails.interest}
+              </span>
             </Label>
             <Label>
               Interests (select only 3){' '}
@@ -300,7 +303,12 @@ export default function Profile() {
             </div>
 
             <div className="my-4 flex flex-col gap-4">
-              <Label>Current: {profileDetails.looking_for}</Label>
+              <Label>
+                Current:{' '}
+                <span className="bg-red-300 w-fit p-1 rounded-md">
+                  {profileDetails.looking_for}
+                </span>{' '}
+              </Label>
               <Select onValueChange={handleLookingFor}>
                 <SelectTrigger>
                   <SelectValue placeholder="Looking for.." />

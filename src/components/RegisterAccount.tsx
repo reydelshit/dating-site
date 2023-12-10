@@ -12,8 +12,8 @@ export default function RegisterAccount() {
 
   const credential_id = localStorage.getItem('dating_site_id');
 
-  if (credential_id === null || ' ') {
-    navigate((window.location.href = '/'));
+  if (credential_id !== null || ' ') {
+    return navigate((window.location.href = '/home'));
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

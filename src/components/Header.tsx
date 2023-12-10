@@ -50,9 +50,11 @@ export default function Header() {
                     <Button>Profile</Button>
                   </Link>
 
-                  <Link to="/home">
-                    <Button>Find Match</Button>
-                  </Link>
+                  {location.pathname !== '/home' && (
+                    <Link to="/home">
+                      <Button>Find Match</Button>
+                    </Link>
+                  )}
                 </div>
               )}
             </div>
