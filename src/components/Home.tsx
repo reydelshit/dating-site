@@ -166,8 +166,8 @@ export default function Home() {
         console.log(res.data, 'chat');
         setProfileMatched(res.data);
         setRecepientIDNumber(id);
-        // setShowFindMatch(true);
-        // setShowChatNow(true);
+        setShowFindMatch(false);
+        setShowChatNow(true);
       });
   };
 
@@ -218,7 +218,7 @@ export default function Home() {
                 .map((mes, index) => {
                   return (
                     <div
-                      className=" p-2 mt-[1rem] rounded-sm border-2 border-red-500"
+                      className=" p-2 mt-[1rem] rounded-sm border-2 border-red-500 bg-white"
                       key={index}
                     >
                       <div className="flex items-center gap-4">
@@ -496,26 +496,29 @@ export default function Home() {
                   className="w-[40rem] mt-[-10rem] bg-white border-2 p-4 rounded-lg"
                   key={index}
                 >
-                  <div className="flex h-[7rem]  items-center gap-4 border-b-2">
-                    <img
-                      className="w-[5rem] h-[5rem] object-cover rounded-full "
-                      src={profile.profile}
-                      alt=""
-                    />
+                  <div className="flex h-[7rem] justify-between items-center gap-4 border-b-2">
+                    <div className="flex items-center">
+                      <img
+                        className="w-[5rem] h-[5rem] object-cover rounded-full "
+                        src={profile.profile}
+                        alt=""
+                      />
+                      <div className="flex flex-col">
+                        <h1 className="font-bold">
+                          {profile.fullname +
+                            ', ' +
+                            profile.age +
+                            '. ' +
+                            profile.gender +
+                            ' - ' +
+                            profile.course}
+                        </h1>
 
-                    <div>
-                      <h1 className="font-bold">
-                        {profile.fullname +
-                          ', ' +
-                          profile.age +
-                          '. ' +
-                          profile.gender +
-                          ' - ' +
-                          profile.course}
-                      </h1>
-
-                      <p>{profile.looking_for}</p>
+                        <p>{profile.looking_for}</p>
+                      </div>
                     </div>
+
+                    <Button onClick={() => setShowChatNow(false)}>Close</Button>
                   </div>
 
                   <div>

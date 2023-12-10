@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { Button } from './ui/button';
 import axios from 'axios';
@@ -8,6 +8,7 @@ export default function Header() {
   const credential_id = localStorage.getItem('dating_site_id');
   const [userImage, setUserImage] = useState('');
   const [fullname, setFullname] = useState('');
+  const location = useLocation();
 
   const handleLogout = () => {
     localStorage.removeItem('dating_site_id');
@@ -43,9 +44,11 @@ export default function Header() {
               />
               <h1 className="text-2xl">{fullname}</h1>
 
-              <Link className="ml-[2rem]" to="/profile">
-                <Button>Profile</Button>
-              </Link>
+              {location.pathname !== '/settingup-account' && (
+                <Link to="/profile">
+                  <Button>Profile</Button>
+                </Link>
+              )}
             </div>
 
             <Button onClick={handleLogout}>Logout</Button>
