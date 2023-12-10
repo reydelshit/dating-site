@@ -1,5 +1,6 @@
+import { Link } from 'react-router-dom';
 import { Button } from './components/ui/button';
-import ImageDating from '@/assets/62335.jpg';
+import ImageDating from '@/assets/62335.png';
 function App() {
   return (
     <div className="flex justify-around items-center w-full p-4 h-[80%]">
@@ -11,7 +12,9 @@ function App() {
         <p className="text-2xl">
           Find someone who have the same interest with you
         </p>
-        <Button className="mt-[4rem] w-[10rem]">Sign Up</Button>
+        <Link to="/register">
+          <Button className="mt-[4rem] w-[10rem]">Sign Up</Button>
+        </Link>
       </div>
       <img className="w-[60%] z-[-20]" src={ImageDating} alt="image" />
     </div>

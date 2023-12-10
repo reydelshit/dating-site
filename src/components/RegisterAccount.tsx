@@ -10,6 +10,12 @@ export default function RegisterAccount() {
 
   const navigate = useNavigate();
 
+  const credential_id = localStorage.getItem('dating_site_id');
+
+  if (credential_id === null || ' ') {
+    navigate((window.location.href = '/'));
+  }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const name = e.target.name;

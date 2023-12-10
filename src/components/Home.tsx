@@ -60,6 +60,10 @@ export default function Home() {
   const [showMessageRecepient, setShowMessageRecepient] = useState(false);
   const [showChatNow, setShowChatNow] = useState(false);
 
+  if (!credential_id) {
+    window.location.href = '/login';
+  }
+
   const handleShowMessage = (id: number) => {
     setRecepientIDNumber(id);
     axios

@@ -45,9 +45,15 @@ export default function Header() {
               <h1 className="text-2xl">{fullname}</h1>
 
               {location.pathname !== '/settingup-account' && (
-                <Link to="/profile">
-                  <Button>Profile</Button>
-                </Link>
+                <div className="ml-[2rem] flex gap-4">
+                  <Link to="/profile">
+                    <Button>Profile</Button>
+                  </Link>
+
+                  <Link to="/home">
+                    <Button>Find Match</Button>
+                  </Link>
+                </div>
               )}
             </div>
 
