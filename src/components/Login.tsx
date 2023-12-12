@@ -21,17 +21,18 @@ export default function Login() {
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // console.log('hey');
+
     axios
       .get(`${import.meta.env.VITE_DATING_SITE}/login.php`, {
         params: loginDetails,
       })
       .then((res) => {
-        if (res.status === 200) {
-          console.log('success');
-          localStorage.setItem('dating_site_id', res.data[0].credential_id);
+        console.log('success');
+        console.log(res.data);
+        localStorage.setItem('dating_site_id', res.data[0].credential_id);
 
-          window.location.href = '/settingup-account';
-        }
+        window.location.href = '/settingup-account';
       });
   };
 
